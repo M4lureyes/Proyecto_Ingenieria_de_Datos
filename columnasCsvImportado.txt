@@ -1,0 +1,42 @@
+Modulo Inventario -> Informes -> mov X articulo -> Incluir Detalle.
+Código: Código único del producto en el sistema, no puede estar vacío.
+Nombre: Nombre del producto, siempre debe estar presente.
+Unidad: Unidad de medida en la que se comercializa el producto (por ejemplo, CJX15K, UND).
+Código Grupo: Código que pertenece al grupo de productos al que el artículo pertenece.
+Grupo: Descripción del grupo al que pertenece el producto (por ejemplo, GRASAS, A GRANEL).
+Cód Subgrupo: Código de un subgrupo dentro del grupo de productos.
+Subgrupo: Descripción del subgrupo dentro del grupo (por ejemplo, MARGARINAS, HOJALDRES.
+Cód. Marca: Código de la marca del producto.
+Marca: Nombre de la marca que fabrica el producto (por ejemplo, SIGRA SA, AJOVER SA).
+CODFABR: Código del fabricante del producto.
+NOMFABR: Nombre del fabricante del producto (por ejemplo, MANTEQUILLEROS, RESTAURANTES).
+Cód Bodega: Código de la bodega donde se encuentra almacenado el producto.
+Bodega: Descripción del lugar de almacenamiento del producto, siempre debe estar presente (hay 3 opciones: MERCADO, PRIMERO DE MAYO, CUARTO FRIO).
+Saldo Ini: El saldo inicial de productos en inventario al comienzo del periodo. Siempre será el mismo valor en cada fila para cada csv generado en un mismo periodo y para una misma bodega.
+Entradas: Cantidad de productos que ingresan al inventario durante un movimiento.
+Salidas: Cantidad de productos que salen del inventario durante un movimiento.
+Saldo Final: El saldo final de productos en inventario después de las entradas y salidas. En el csv, está organizado de forma acumulada. Es decir, el saldo final de la fila anterior de un mismo producto en una misma bodega es el actual antes de agregarle o restarle inventario.
+Tipo Doc.: Tipo de modificación de inventario realizado. Estos son los posibles tipos:
+•	ENSAMBLE: si un producto sale o entra como ensamble.
+•	AJUSTE: si la existencia física de un producto no concuerda con el sistema.
+•	FACTVENT: si se vende un producto.
+•	FACTCOMP: si se compra un producto.
+•	TRANSFER: si se transfiere un producto de una bodega a otra.
+•	SALIDA: si un producto sale no como venta (ej. buñuelos para navidad).
+•	DEVOLCLI: devolución de venta.
+•	ENTRADA: si un producto no entra como compra (ej. bonos que regala un cliente).
+•	DESENSAM: si un producto sale o entra como desensamble.
+•	DEVOLPRV: devolución de compra.
+Prefijo: Prefijo del documento (si existe) asociado con el movimiento. No es único.
+Número: Número del documento (si existe) o transacción. No es necesariamente único.
+Fecha: Fecha en que se realiza la transacción o movimiento del inventario.
+Concepto: Descripción del motivo de la transacción.
+Nit: Número de identificación tributaria del tercero (si lo hay) involucrado en la transacción.
+Tercero: Nombre de la persona o empresa relacionada con la transacción (si la hay).
+CODVEN: Código del vendedor que realizó la transacción (si lo hay).
+NOMVEND: Nombre del vendedor (si lo hay).
+COSTO: Costo total (no unitario, sin impuestos) del producto movido en la transacción. El precio sin impuesto unitario sería igual a COSTO/(Entradas + Salidas)
+C: Es el identificador único de todas y cada una de las transacciones realizadas. No se repite. Entero. Será la llave primaria. Cuando hay un ensamble de productos, la transacción de entrada es n y la transacción de salida es n+1. Cuando hay un desensamble de productos, la transacción de salida es n y la transacción de entrada es n+1.
+LOTE: Número de lote del producto. Vacío.
+LO_VENCE: Fecha de vencimiento del lote. Vacío.
+RESERVADO: Vacío.
