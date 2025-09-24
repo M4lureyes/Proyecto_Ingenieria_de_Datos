@@ -1,73 +1,53 @@
-CREATE DATABASE bdMovimientosInventario;
+create database bdMovimientosInventario;
 
-USE bdMovimientosInventario;
+use bdMovimientosInventario;
 
-CREATE TABLE Grupo(
-    codigoGrupo int PRIMARY KEY,
-    descripcionGrupo varchar(32) NOT NULL UNIQUE
-);
-
-CREATE TABLE Subgrupo(
-    codigoSubgrupo int PRIMARY KEY,
-    descripcionSubGrupo varchar(32) UNIQUE
-);
-
-CREATE TABLE Marca(
-    codigoMarca int PRIMARY KEY,
-    descripcionMarca varchar(32) NOT NULL UNIQUE
-);
-
-CREATE TABLE Fabricante(
-    codigoFabricante int PRIMARY KEY,
-    descripcionFabricante varchar(32) NOT NULL UNIQUE
-);
-
-CREATE TABLE Producto(
-    codigoProducto varchar(32) PRIMARY KEY,
-    nombreProducto varchar(64) NOT NULL,
-    unidad varchar(32) NOT NULL,
-    codigoGrupo int NOT NULL,
-    codigoSubgrupo int,
-    codigoMarca int,
-    codigoFabricante int,
-    esComprable BOOL DEFAULT FALSE,
-    FOREIGN KEY (codigoGrupo) REFERENCES Grupo(codigoGrupo),
-    FOREIGN KEY (codigoSubgrupo) REFERENCES Subgrupo(codigoSubgrupo),
-    FOREIGN KEY (codigoMarca) REFERENCES Marca(codigoMarca),
-    FOREIGN KEY (codigoFabricante) REFERENCES Fabricante(codigoFabricante)
-);
-
-CREATE TABLE Tercero(
-	nitTercero varchar(32) PRIMARY KEY,
+create table tercero(
+	nitTercero varchar(32) primary key not null,
     nombreTercero varchar(64),
-    esProovedor bool default false
+    esProveedor bool default false
 );
 
-CREATE TABLE Bodega(
-	codigoBodega int PRIMARY KEY NOT NULL,
-    nombreBodega varchar(32) NOT NULL
+create table productoCompra(
+	codigoProdCompra varchar(32) primary key not null,
+    nombreProdCompra varchar(128) not null,
+    unidadProdCompra varchar(16),
+    estadoProdCompra varchar(32) default 'Activo'
 );
 
-CREATE TABLE Movimiento(
-	tipoMovimiento int PRIMARY KEY NOT NULL,
-    nombreMovimiento varchar(32) NOT NULL
+create table productoReal(
+	codigoProdReal varchar(32) primary key not null,
+    nombreProdReal varchar(128) not null,
+    unidadProdReal varchar(16),
+    esComprable bool default false,
+    estadoProdReal varchar(32) default 'Activo'
 );
 
-CREATE TABLE MovimientoInventario(
-	codigoMovimiento int PRIMARY KEY NOT NULL,
-    codigoProducto varchar(32),
-    tipoMovimiento int,
-    codigoBodega int,
-    cantidadPrevia double NOT NULL,
-    cantidadEntrada double NOT NULL,
-    cantidadSalida double NOT NULL,
-    cantidadFinal double NOT NULL,
+create table productoCompraProductoReal(
+	codigoEnsamble int primary key auto_increment,
+    codigoProdCompra varchar(32) not null,
+    codigoProdReal varchar(32) not null,
+    foreign key (codigoProdCompra) references productoCompra(codigoProdCompra),
+    foreign key (codigoProdReal) references productoReal(codigoProdReal)
+);
+
+create table movimientoInventario(
+	codigoMov int primary key not null,
+    codigoProdReal varchar(32) not null,
+    bodega varchar(32) not null,
+	cantidadPrevia float not null,
+    cantidadEntrada float not null,
+    cantidadSalida float not null,
+    cantidadFinal float not null,
+    tipoMovimiento varchar(16) not null,
+    prefijo varchar(8) not null,
+    numero varchar(16) not null,
+    fecha date not null,
     concepto varchar(128),
     nitTercero varchar(32),
-    FOREIGN KEY (codigoProducto) REFERENCES Producto(codigoProducto),
-    FOREIGN KEY (tipoMovimiento) REFERENCES Movimiento(tipoMovimiento),
-    FOREIGN KEY (codigoBodega) REFERENCES Bodega(codigoBodega),
-    FOREIGN KEY (nitTercero) REFERENCES Tercero(nitTercero)
+    costo float not null,
+    foreign key (codigoProdReal) references productoReal(codigoProdReal),
+    foreign key (nitTercero) references Tercero(nitTercero)
 );
 
-DESCRIBE MovimientoInventario;
+#drop database bdmovimientosinventario;
