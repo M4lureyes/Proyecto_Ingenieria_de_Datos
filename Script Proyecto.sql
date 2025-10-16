@@ -606,3 +606,237 @@ SELECT * FROM Compra;
     SELECT C.idCompra, C.totalCompra, I.ubicacion
     FROM Compra C
     INNER JOIN Inventario I ON C.idInventario = I.idInventario;
+    
+#Modificaciones
+    #1. Actualizar estado usuario
+    UPDATE Usuario
+    SET estadoUsuario = 'Inactivo'
+    WHERE nombreUsuario = 'Juan Pérez'
+    LIMIT 1;
+        #Verificación
+        SELECT * FROM Usuario WHERE nombreUsuario = 'Juan Pérez';
+    
+    #2. Cambiar precio
+    UPDATE Producto
+    SET precio = 6000.00
+    WHERE marca = 'Pantene'
+    LIMIT 1;
+        #Verificación
+        SELECT * FROM Producto WHERE marca = 'Pantene';
+    
+    #3. Modificar cantidad disponible
+    UPDATE Inventario
+    SET cantidadDisponible = cantidadDisponible - 20
+    WHERE idInventario = 1
+    LIMIT 1;
+        #Verificación
+        SELECT * FROM Inventario WHERE idInventario = 1;
+        
+    #4. Actualizar proveedor de una compra específica
+    UPDATE Compra
+    SET proveedor = 'Nestlé Colombia S.A.'
+    WHERE idCompra = 1;
+        #Verifiación
+        SELECT * FROM Compra WHERE idCompra = 1;
+        
+    #5. Agregar campo nuevo en Ventas
+    ALTER TABLE Venta
+    ADD COLUMN metodoPago VARCHAR(25);
+        #Verificación
+        DESCRIBE Venta;
+
+#Eliminación
+#Eliminar venta
+DELETE FROM Venta
+WHERE idVenta = 50
+LIMIT 1;
+    #Verificación
+    SELECT * FROM Venta WHERE idVenta = 50;
+
+#Consultas Multitabla
+    #1. Ventas con información de producto, usuario y tipo de transacción
+    SELECT 
+        V.idVenta,
+        V.fechaVenta,
+        P.marca AS Producto,
+        P.tipoProducto,
+        U.nombreUsuario AS Responsable,
+        TT.nombreTransaccion AS TipoTransaccion,
+        V.totalVenta
+    FROM Venta V
+    INNER JOIN Inventario I ON V.idInventario = I.idInventario
+    INNER JOIN Producto P ON I.idProducto = P.idProducto
+    INNER JOIN Usuario U ON I.idUsuario = U.idUsuario
+    INNER JOIN TipoTransaccion TT ON I.idTipoTransaccion = TT.idTipoTransaccion
+    ORDER BY V.fechaVenta DESC;
+
+    #2. Compras con información de producto, usuario y ubicación
+    SELECT
+        C.idCompra,
+        C.fechaCompra,
+        C.proveedor,
+        P.marca AS Producto,
+        U.nombreUsuario AS Encargado,
+        I.ubicacion AS Bodega,
+        C.totalCompra
+    FROM Compra C
+    INNER JOIN Inventario I ON C.idInventario = I.idInventario
+    INNER JOIN Producto P ON I.idProducto = P.idProducto
+    INNER JOIN Usuario U ON I.idUsuario = U.idUsuario
+    ORDER BY fechaCompra DESC;
+
+#Subconsultas
+    #1. Productos cuyo precio esté por encima del promedio general
+    SELECT marca, precio
+    FROM Producto
+    WHERE precio > (SELECT AVG(precio) FROM Producto);
+    
+    #2. Productos con cantidad disponible menor al promedio general
+    SELECT 
+        I.idInventario,
+        P.marca AS Producto,
+        I.cantidadDisponible,
+    (SELECT AVG(cantidadDisponible) FROM Inventario) AS PromedioGeneral
+    FROM Inventario I
+    INNER JOIN Producto P ON I.idProducto = P.idProducto
+    WHERE I.cantidadDisponible < (SELECT AVG(cantidadDisponible) FROM Inventario);
+
+#Procedimientos almacenados
+    #1. Registrar una venta nueva
+    DELIMITER $$
+    CREATE PROCEDURE RegistrarVenta(
+        IN p_idInventario INT,
+        IN p_cantidadVenta INT,
+        IN p_precioUnidad FLOAT
+    )
+    BEGIN
+        DECLARE v_totalVenta FLOAT;
+        SET v_totalVenta = p_cantidadVenta * p_precioUnidad;
+        INSERT INTO Venta (fechaVenta, cantidadVenta, precioUnidad, totalVenta, idInventario)
+        VALUES (CURDATE(), p_cantidadVenta, p_precioUnidad, v_totalVenta, p_idInventario);
+        UPDATE Inventario
+        SET cantidadDisponible = cantidadDisponible - p_cantidadVenta
+        WHERE idInventario = p_idInventario;
+    END $$
+    DELIMITER ;
+        #Verificación
+        CALL RegistrarVenta(1, 5, 2500.00);
+        
+    #2. Consultar resumen de compras por proveedor
+    DELIMITER $$
+    CREATE PROCEDURE ResumenComprasPorProveedor()
+    BEGIN
+        SELECT 
+            proveedor,
+            COUNT(*) AS NumeroCompras,
+            SUM(totalCompra) AS TotalGastado
+        FROM Compra
+        GROUP BY proveedor
+        ORDER BY TotalGastado DESC;
+    END $$
+    DELIMITER ;
+        #Verificación
+        CALL ResumenComprasPorProveedor();
+    
+#Vistas
+    #1. Vista ventas
+    CREATE VIEW VistaVentasDetalladas AS
+    SELECT 
+        V.idVenta,
+        V.fechaVenta,
+        P.marca AS Producto,
+        P.tipoProducto,
+        U.nombreUsuario AS Responsable,
+        I.ubicacion AS Bodega,
+        V.cantidadVenta,
+        V.precioUnidad,
+        V.totalVenta
+    FROM Venta V
+    INNER JOIN Inventario I ON V.idInventario = I.idInventario
+    INNER JOIN Producto P ON I.idProducto = P.idProducto
+    INNER JOIN Usuario U ON I.idUsuario = U.idUsuario;
+        #Verificación
+        SELECT * FROM VistaVentasDetalladas;
+        
+    #2. Vista inventario
+    CREATE VIEW VistaInventario AS
+    SELECT 
+        I.idInventario,
+        P.marca AS Producto,
+        P.tipoProducto,
+        I.cantidadDisponible,
+        I.cantidadMinima,
+        I.ubicacion,
+        U.nombreUsuario AS Responsable,
+        TT.nombreTransaccion AS TipoTransaccion
+    FROM Inventario I
+    INNER JOIN Producto P ON I.idProducto = P.idProducto
+    INNER JOIN Usuario U ON I.idUsuario = U.idUsuario
+    INNER JOIN TipoTransaccion TT ON I.idTipoTransaccion = TT.idTipoTransaccion;
+        #Verificación
+        SELECT * FROM VistaInventario;
+
+#Triggers
+    #1. Actualizar inventario después de una venta
+    DELIMITER $$
+    CREATE TRIGGER actualizarInventarioDespuesVenta
+    AFTER INSERT ON Venta
+    FOR EACH ROW
+    BEGIN
+        UPDATE Inventario
+        SET cantidadDisponible = cantidadDisponible - NEW.cantidadVenta
+        WHERE idInventario = NEW.idInventario;
+    END $$
+    DELIMITER ;
+
+    #2. Actualizar inventario después de una compra
+    DELIMITER $$
+    CREATE TRIGGER actualizarInventarioDespuesCompra
+    AFTER INSERT ON Compra
+    FOR EACH ROW
+    BEGIN
+        UPDATE Inventario
+        SET cantidadDisponible = cantidadDisponible + NEW.cantidadCompra
+        WHERE idInventario = NEW.idInventario;
+    END $$
+    DELIMITER ;
+
+    #Verificación
+    #Registrar venta
+    INSERT INTO Venta (fechaVenta, cantidadVenta, precioUnidad, totalVenta, idInventario)
+    VALUES (CURDATE(), 3, 2500.00, 7500.00, 1);
+
+    #Registrar compra
+    INSERT INTO Compra (fechaCompra, cantidadCompra, precioUnidad, totalCompra, proveedor, idInventario)
+    VALUES (CURDATE(), 10, 2500.00, 25000.00, 'Nestlé', 1);
+
+    #Comprobar inventario actualizado
+    SELECT idInventario, cantidadDisponible
+    FROM Inventario
+    WHERE idInventario = 1;
+
+    #3. Evitar ventas con cantidad superior al inventario disponible
+    DELIMITER $$
+    CREATE TRIGGER verificarStockAntesVenta
+    BEFORE INSERT ON Venta
+    FOR EACH ROW
+    BEGIN
+        DECLARE stockDisponible INT;
+        SELECT cantidadDisponible INTO stockDisponible
+        FROM Inventario
+        WHERE idInventario = NEW.idInventario;
+        IF stockDisponible < NEW.cantidadVenta THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Error: No hay suficiente stock disponible para realizar la venta.';
+        END IF;
+    END $$
+    DELIMITER ;
+    
+    #Verificación
+    #Intentar vender más de lo disponible
+    INSERT INTO Venta (fechaVenta, cantidadVenta, precioUnidad, totalVenta, idInventario)
+    VALUES (CURDATE(), 9999, 2500.00, 24997500.00, 1);
+
+    #Intentar vender una cantidad válida (debería permitirlo)
+    INSERT INTO Venta (fechaVenta, cantidadVenta, precioUnidad, totalVenta, idInventario)
+    VALUES (CURDATE(), 2, 2500.00, 5000.00, 1);
