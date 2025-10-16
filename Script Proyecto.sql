@@ -24,17 +24,17 @@ CREATE TABLE Producto(
 #Tabla Tipo de Tranasacciones
 CREATE TABLE TipoTransaccion(
 	idTipoTransaccion INT AUTO_INCREMENT PRIMARY KEY,
-    nombreTransaccion VARCHAR(50),
-    entrada BOOLEAN,
-    salida BOOLEAN
+    nombreTransaccion VARCHAR(50) NOT NULL,
+    entrada BOOLEAN NOT NULL,
+    salida BOOLEAN NOT NULL
 );
 
 #Tabla Inventario
 CREATE TABLE Inventario(
 	idInventario INT AUTO_INCREMENT PRIMARY KEY,
-    cantidadDisponible INT,
-    cantidadMinima INT,
-    ubicacion VARCHAR(25),
+    cantidadDisponible INT NOT NULL,
+    cantidadMinima INT NOT NULL,
+    ubicacion VARCHAR(25) NOT NULL,
     idUsuario INT NOT NULL,
     idProducto INT NOT NULL,
     idTipoTransaccion INT NOT NULL,
