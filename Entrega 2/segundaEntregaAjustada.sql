@@ -1,4 +1,4 @@
-# PRIMERA SECCION:ESTRUCTURA DE LA BASE DE DATOS
+# PRIMERA SECCION: ESTRUCTURA DE LA BASE DE DATOS
 create database bdInventarioTarajai;
 use bdInventarioTarajai;
 
@@ -28,7 +28,8 @@ create table inventario (
     fechaActualizacion date not null,
     idUsuarioFK int,
     foreign key (idProductoFK) references producto(idProducto),
-    foreign key (idUsuarioFK) references usuario(idUsuario)
+    foreign key (idUsuarioFK) references usuario(idUsuario),
+    unique (idProductoFK, bodega)
 );
 
 create table movimiento (
@@ -79,7 +80,7 @@ create table ensamble(
     unique (idProductoPadreFK, idProductoHijoFK)
 );
 
-# SEGUNDA SECCION: REGISTROS E IMPORTACION DE DATOS
+# SEGUNDA SECCION: TABLA FANTASMA DE IMPORTACION
 
 # Esta tablita temporal es para obtener todos los datos del csv procesado
 create table tablaImportacion(
@@ -121,6 +122,8 @@ ignore 1 rows (
     nombreTercero,
     valorUnitario
 );
+
+# TERCERA SECCION: CRUD DE CADA TABLA
 
 # CRUD Usuario
 # 1. Registrar usuario
@@ -572,6 +575,8 @@ begin
 end $$
 delimiter ;
 
+# CUARTA SECCION: GETS DE CADA TABLA
+
 # Gets de Usuario
 # 37. Obtener nombre de usuario
 delimiter $$
@@ -954,9 +959,9 @@ begin
 end $$
 delimiter ;
 
-#### LOS RQF LLEGAN HASTA ACA, EN ADELANTE ES ENREDO QUE NO VA EN LOS RQF PARA LOS COMPAÑEROS
+### QUINTA SECCION: ESTRUCTURA DE IMPORTACION
 
-# XX. Generar identificador de inventario
+# 68. Generar identificador de inventario
 delimiter $$
 create function GenerarIdInventario(
     i_idProducto varchar(32),
@@ -968,7 +973,7 @@ begin
 end $$
 delimiter ;
 
-# XX. Generar identificador de ensamble
+# 69. Generar identificador de ensamble
 delimiter $$
 create function GenerarIdEnsamble(
     i_idProductoPadre varchar(32),
@@ -980,7 +985,7 @@ begin
 end $$
 delimiter ;
 
-# XX. Registrar productos de importacion
+# 70. Registrar productos de importacion
 delimiter $$
 create procedure RegistrarProductosDeImportacion()
 begin
@@ -990,7 +995,7 @@ begin
 end $$
 delimiter ;
 
-# XX. Registrar inventarios de importacion
+# 71. Registrar inventarios de importacion
 delimiter $$
 create procedure RegistrarInventariosDeImportacion()
 begin
@@ -1004,7 +1009,7 @@ begin
 end $$
 delimiter ;
 
-# XX. Actualizar inventario con cada movimiento
+# 72. Actualizar inventario con cada movimiento
 delimiter $$
 create trigger autoActualizarInventario
 after insert on movimiento
@@ -1017,7 +1022,7 @@ begin
 end $$
 delimiter ;
 
-# XX. Registrar movimientos de importación
+# 73. Registrar movimientos de importación
 delimiter $$
 create procedure RegistrarMovimientosDeImportacion()
 begin
@@ -1031,7 +1036,7 @@ begin
 end $$
 delimiter ;
 
-# XX. Registrar proveedores de importación
+# 74. Registrar proveedores de importación
 delimiter $$
 create procedure RegistrarProveedoresDeImportacion()
 begin
@@ -1046,7 +1051,7 @@ begin
 end $$
 delimiter ;
 
-# XX. Registrar compras de importación
+# 75. Registrar compras de importación
 delimiter $$
 create procedure RegistrarComprasDeImportacion()
 begin
@@ -1061,7 +1066,7 @@ begin
 end $$
 delimiter ;
 
-# XX. Registrar clientes de importación
+# 76. Registrar clientes de importación
 delimiter $$
 create procedure RegistrarClientesDeImportacion()
 begin
@@ -1076,7 +1081,7 @@ begin
 end $$
 delimiter ;
 
-# XX. Registrar ventas de importación
+# 77. Registrar ventas de importación
 delimiter $$
 create procedure RegistrarVentasDeImportacion()
 begin
@@ -1091,7 +1096,7 @@ begin
 end $$
 delimiter ;
 
-# XX. Registrar ensambles a partir de movimientos
+# 78. Registrar ensambles a partir de movimientos
 delimiter $$
 create procedure RegistrarEnsamblesPorMovimientos()
 begin
@@ -1128,7 +1133,7 @@ begin
 end$$
 delimiter ;
 
-# XX. Importar datos
+# 79. Importar datos
 delimiter $$
 create procedure ImportarDatos()
 begin
@@ -1143,9 +1148,343 @@ begin
 end$$
 delimiter ;
 
+### SEXTA SECCION: OTROS RQF
+
+# 80. Consultar ensamblados de padre
+delimiter $$
+create procedure ConsultarEnsambladosDePadre(in p_idProductoPadre varchar(32))
+begin
+    select idEnsamble, idProductoHijoFK, razonHijosPorPadre
+    from ensamble
+    where idProductoPadreFK = p_idProductoPadre;
+end $$
+delimiter ;
+#call ConsultarEnsambladosDePadre('000020B'); # 1HARINA 50K ELITE REPOSTERA
+
+# 81. Consultar existencias en cada bodega de un producto
+delimiter $$
+create procedure ConsultarExistencias(in p_idProducto varchar(32))
+begin
+    select 
+        GetBodega(i.idInventario) as bodega,
+        GetCantidadInventario(i.idInventario) as cantidad,
+        GetFechaActualizacion(i.idInventario) as fechaActualizacion
+    from inventario i
+    where GetIdProducto(i.idInventario) = p_idProducto
+    order by GetBodega(i.idInventario);
+end $$
+delimiter ;
+#call ConsultarExistencias('000020B'); # Retorna todo el stock de 1HARINA 50K ELITE REPOSTERA
+
+# 82. Consultar productos de proveedor
+delimiter $$
+create procedure ConsultarProductosDeProveedor(in p_nitProveedor varchar(32))
+begin
+    select distinct
+        GetIdProducto(GetIdInventario(c.idMovimientoFK)) as idProducto,
+        GetNombreProducto(GetIdProducto(GetIdInventario(c.idMovimientoFK))) as nombreProducto,
+        GetUnidadProducto(GetIdProducto(GetIdInventario(c.idMovimientoFK))) as unidadProducto
+    from compra c
+    where GetNitProveedor(c.idMovimientoFK) = p_nitProveedor;
+end $$
+delimiter ;
+#call ConsultarProductosDeProveedor('890400372'); # Retorna todos los productos de Tres Castillos
+
+# 83. Consultar movimientos de producto por mes
+delimiter $$
+create procedure ConsultarMovimientosDeProductoMes(
+    in p_idProducto varchar(32),
+    in p_anio int,
+    in p_mes int)
+begin
+    select 
+        p.idProducto,
+        GetNombreProducto(p.idProducto) as nombreProducto,
+        GetUnidadProducto(p.idProducto) as unidadProducto,
+        p_anio as anio,
+        p_mes as mes,
+        # sumatoria de movimientos positivos = entradas
+        sum(case when m.cantidadNetaMovimiento > 0 then m.cantidadNetaMovimiento else 0 end) as cantidadEntrada,
+        # sumatoria de movimientos negativos = salidas
+        sum(case when m.cantidadNetaMovimiento < 0 then m.cantidadNetaMovimiento else 0 end) as cantidadSalida,
+        # total de compras asociadas al producto en el mes
+        sum(coalesce(c.costoTotalCompra, 0)) as totalCompras
+    from producto p
+    left join inventario i 
+        on i.idProductoFK = p.idProducto
+    left join movimiento m 
+        on m.idInventarioFK = i.idInventario
+        and year(m.fechaMovimiento) = p_anio
+        and month(m.fechaMovimiento) = p_mes
+    left join compra c 
+        on c.idMovimientoFK = m.idMovimiento
+    where p.idProducto = p_idProducto
+    group by p.idProducto, p.nombreProducto, p.unidadProducto, p_anio, p_mes
+    order by p.idProducto;
+end $$
+delimiter ;
+#call ConsultarMovimientosDeProductoMes('000020B', 2025, 9); # HARINA 50K ELITE REPOSTERA
+
+# 84. Consultar movimientos de ensamblados por mes
+delimiter $$
+create procedure ConsultarMovimientosDeEnsambladosPorMes(
+    in p_idProductoPadre varchar(32),
+    in p_anio int,
+    in p_mes int)
+begin
+    select 
+        e.idProductoPadreFK as idProductoPadre,
+        e.idProductoHijoFK as idProductoHijo,
+        GetNombreProducto(e.idProductoHijoFK) as nombreProductoHijo,
+        GetUnidadProducto(e.idProductoHijoFK) as unidadProducto,
+        p_anio as anio,
+        p_mes as mes,
+        # las entradas son movimientos positivos
+        sum(case when m.cantidadNetaMovimiento > 0 then m.cantidadNetaMovimiento else 0 end) as cantidadEntrada,
+        # las salidas son movimientos negativos
+        sum(case when m.cantidadNetaMovimiento < 0 then m.cantidadNetaMovimiento else 0 end) as cantidadSalida
+    from ensamble e
+    left join inventario i 
+        on i.idProductoFK = e.idProductoHijoFK
+    left join movimiento m 
+        on m.idInventarioFK = i.idInventario
+        and year(m.fechaMovimiento) = p_anio
+        and month(m.fechaMovimiento) = p_mes
+    where e.idProductoPadreFK = p_idProductoPadre
+    group by 
+        e.idProductoPadreFK, 
+        e.idProductoHijoFK, 
+        p_anio, 
+        p_mes
+    order by e.idProductoHijoFK;
+end $$
+delimiter ;
+#call ConsultarMovimientosDeEnsambladosPorMes('000020B', 2025, 9); # 1HARINA 50K ELITE REPOSTERA
+
+# 85. Consultar movimientos de proveedor por mes
+delimiter $$
+create procedure ConsultarMovimientosDeProveedorMes(
+    in p_nitProveedor varchar(32),
+    in p_anio int,
+    in p_mes int)
+begin
+    select 
+        p.idProducto, 
+        p.nombreProducto,
+        p.unidadProducto,
+        p_anio as anio,
+        p_mes as mes,
+        # entradas: movimientos positivos
+        sum(case when m.cantidadNetaMovimiento > 0 then m.cantidadNetaMovimiento else 0 end) as cantidadEntrada,
+        # salidas: movimientos negativos
+        sum(case when m.cantidadNetaMovimiento < 0 then m.cantidadNetaMovimiento else 0 end) as cantidadSalida,
+        sum(coalesce(c.costoTotalCompra, 0)) as totalCompras
+    from producto p
+    left join inventario i 
+        on p.idProducto = i.idProductoFK
+    left join movimiento m 
+        on i.idInventario = m.idInventarioFK
+        and year(m.fechaMovimiento) = p_anio
+        and month(m.fechaMovimiento) = p_mes
+    left join compra c 
+        on m.idMovimiento = c.idMovimientoFK
+    where exists
+		(select 1
+        from compra c2
+        join movimiento m2 on m2.idMovimiento = c2.idMovimientoFK
+        join inventario i2 on m2.idInventarioFK = i2.idInventario
+        where c2.nitProveedorFK = p_nitProveedor
+          and i2.idProductoFK = p.idProducto)
+    group by p.idProducto, p.nombreProducto, p.unidadProducto, p_anio, p_mes
+    order by p.idProducto;
+end $$
+delimiter ;
+#call ConsultarMovimientosDeProveedorMes('890400372', 2025, 9); # RAFAEL DEL CASTILLO & CIA
+
+# 86. Consultar movimientos de producto por mes por bodega
+delimiter $$
+create procedure ConsultarMovimientosDeProductoMesPorBodega(
+    in p_idProducto varchar(32),
+    in p_anio int,
+    in p_mes int)
+begin
+    select 
+        p.idProducto, 
+        p.nombreProducto,
+        p.unidadProducto,
+        p_anio as anio,
+        p_mes as mes,
+        i.bodega,
+        # Entradas (movimientos positivos)
+        sum(case when m.cantidadNetaMovimiento > 0 then m.cantidadNetaMovimiento else 0 end) as cantidadEntrada,
+        # Salidas (movimientos negativos)
+        sum(case when m.cantidadNetaMovimiento < 0 then m.cantidadNetaMovimiento else 0 end) as cantidadSalida,
+        # Total de compras (si aplica)
+        sum(coalesce(c.costoTotalCompra, 0)) as totalCompras
+    from producto p
+    left join inventario i 
+        on p.idProducto = i.idProductoFK
+    left join movimiento m 
+        on i.idInventario = m.idInventarioFK
+        and year(m.fechaMovimiento) = p_anio
+        and month(m.fechaMovimiento) = p_mes
+    left join compra c 
+        on m.idMovimiento = c.idMovimientoFK
+    where p.idProducto = p_idProducto
+    group by p.idProducto, p.nombreProducto, p.unidadProducto, p_anio, p_mes, i.bodega
+    order by i.bodega;
+end $$
+delimiter ;
+#call ConsultarMovimientosDeProductoMesPorBodega('000020B', 2025, 9); # HARINA 50K ELITE REPOSTERA
+
+# TRIGGERS DE INTEGRIDAD PARA EVITAR ERRORES AL ELIMINAR Y OTRAS COSAS
+# Producto (referenciado por inventario y ensamble)
+delimiter $$
+create trigger verificarBorrarProducto
+before delete on producto
+for each row
+begin
+    if exists (select 1 from inventario where idProductoFK = old.idProducto)
+       or exists (select 1 from ensamble where idProductoPadreFK = old.idProducto or idProductoHijoFK = old.idProducto) then
+        signal sqlstate '45000'
+        set message_text = 'No se puede eliminar el producto: existen dependencias en inventario o ensamble.';
+    end if;
+end $$
+delimiter ;
+
+# Usuario (referenciado por inventario)
+delimiter $$
+create trigger verificarBorrarUsuario
+before delete on usuario
+for each row
+begin
+    if exists (select 1 from inventario where idUsuarioFK = old.idUsuario) then
+        signal sqlstate '45000'
+        set message_text = 'No se puede eliminar el usuario: existen registros dependientes en inventario.';
+    end if;
+end $$
+delimiter ;
+
+# Inventario (referenciado por movimiento)
+delimiter $$
+create trigger verificarBorrarInventario
+before delete on inventario
+for each row
+begin
+    if exists (select 1 from movimiento where idInventarioFK = old.idInventario) then
+        signal sqlstate '45000'
+        set message_text = 'No se puede eliminar el inventario: existen movimientos asociados.';
+    end if;
+end $$
+delimiter ;
+
+# Movimiento (referenciado por compra y venta)
+delimiter $$
+create trigger verificarBorrarMovimiento
+before delete on movimiento
+for each row
+begin
+    if exists (select 1 from compra where idMovimientoFK = old.idMovimiento)
+       or exists (select 1 from venta where idMovimientoFK = old.idMovimiento) then
+        signal sqlstate '45000'
+        set message_text = 'No se puede eliminar el movimiento: existen compras o ventas asociadas.';
+    end if;
+end $$
+delimiter ;
+
+# Proveedor (referenciado por compra)
+delimiter $$
+create trigger verificarBorrarProveedor
+before delete on proveedor
+for each row
+begin
+    if exists (select 1 from compra where nitProveedorFK = old.nitProveedor) then
+        signal sqlstate '45000'
+        set message_text = 'No se puede eliminar el proveedor: existen compras registradas.';
+    end if;
+end $$
+delimiter ;
+
+# Cliente (referenciado por venta)
+delimiter $$
+create trigger verificarBorrarCliente
+before delete on cliente
+for each row
+begin
+    if exists (select 1 from venta where nitClienteFK = old.nitCliente) then
+        signal sqlstate '45000'
+        set message_text = 'No se puede eliminar el cliente: existen ventas registradas.';
+    end if;
+end $$
+delimiter ;
+
+# Verificar que idInventario cumple la función GenerarIdInventario
+delimiter $$
+create trigger verificarInsertarInventario
+before insert on inventario
+for each row
+begin
+    declare v_idEsperado varchar(68);
+
+    set v_idEsperado = GenerarIdInventario(new.idProductoFK, new.bodega);
+
+    if new.idInventario != v_idEsperado then
+        signal sqlstate '45000'
+        set message_text = 'idInventario inválido: debe ser igual a GenerarIdInventario(idProductoFK, bodega).';
+    end if;
+end $$
+delimiter ;
+delimiter $$
+create trigger verificarActualizarInventario
+before update on inventario
+for each row
+begin
+    declare v_idEsperado varchar(68);
+
+    set v_idEsperado = GenerarIdInventario(new.idProductoFK, new.bodega);
+
+    if new.idInventario != v_idEsperado then
+        signal sqlstate '45000'
+        set message_text = 'idInventario inválido en actualización: debe ser igual a GenerarIdInventario(idProductoFK, bodega).';
+    end if;
+end $$
+delimiter ;
+
+# Verificar que idEnsamble cumple la función GenerarIdEnsamble
+delimiter $$
+create trigger verificarInsertarEnsamble
+before insert on ensamble
+for each row
+begin
+    declare v_idEsperado varchar(73);
+
+    set v_idEsperado = GenerarIdEnsamble(new.idProductoPadreFK, new.idProductoHijoFK);
+
+    if new.idEnsamble != v_idEsperado then
+        signal sqlstate '45000'
+        set message_text = 'idEnsamble inválido: debe ser igual a GenerarIdEnsamble(idProductoPadreFK, idProductoHijoFK).';
+    end if;
+end $$
+delimiter ;
+delimiter $$
+create trigger verificarActualizarEnsamble
+before update on ensamble
+for each row
+begin
+    declare v_idEsperado varchar(73);
+
+    set v_idEsperado = GenerarIdEnsamble(new.idProductoPadreFK, new.idProductoHijoFK);
+
+    if new.idEnsamble != v_idEsperado then
+        signal sqlstate '45000'
+        set message_text = 'idEnsamble inválido en actualización: debe ser igual a GenerarIdEnsamble(idProductoPadreFK, idProductoHijoFK).';
+    end if;
+end $$
+delimiter ;
+
 /* CORRER EL CODIGO */
 call ImportarDatos();
-drop table tablaImportacion;
+#drop table tablaImportacion;
 
 # Vistas para todas las tablas
 create view vistaUsuarios as select * from usuario;
