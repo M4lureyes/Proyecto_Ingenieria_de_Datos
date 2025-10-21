@@ -28,8 +28,7 @@ create table inventario (
     fechaActualizacion date not null,
     idUsuarioFK int,
     foreign key (idProductoFK) references producto(idProducto),
-    foreign key (idUsuarioFK) references usuario(idUsuario),
-    unique (idProductoFK, bodega)
+    foreign key (idUsuarioFK) references usuario(idUsuario)
 );
 
 create table movimiento (
