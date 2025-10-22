@@ -28,8 +28,7 @@ create table inventario (
     fechaActualizacion date not null,
     idUsuarioFK int,
     foreign key (idProductoFK) references producto(idProducto),
-    foreign key (idUsuarioFK) references usuario(idUsuario),
-    unique (idProductoFK, bodega)
+    foreign key (idUsuarioFK) references usuario(idUsuario)
 );
 
 create table movimiento (
@@ -76,8 +75,7 @@ create table ensamble(
     idProductoHijoFK varchar(32) not null,
     razonHijosPorPadre float not null,
     foreign key (idProductoPadreFK) references producto(idProducto),
-    foreign key (idProductoHijoFK) references producto(idProducto),
-    unique (idProductoPadreFK, idProductoHijoFK)
+    foreign key (idProductoHijoFK) references producto(idProducto)
 );
 
 # SEGUNDA SECCION: TABLA FANTASMA DE IMPORTACION
@@ -1337,7 +1335,7 @@ end $$
 delimiter ;
 #call ConsultarMovimientosDeProductoMesPorBodega('000020B', 2025, 9); # HARINA 50K ELITE REPOSTERA
 
-# TRIGGERS DE INTEGRIDAD PARA EVITAR ERRORES AL ELIMINAR Y OTRAS COSAS
+# SEPTIMA SECCION: TRIGGERS DE INTEGRIDAD PARA EVITAR ERRORES AL ELIMINAR Y OTRAS COSAS
 # Producto (referenciado por inventario y ensamble)
 delimiter $$
 create trigger verificarBorrarProducto
@@ -1482,7 +1480,7 @@ begin
 end $$
 delimiter ;
 
-/* CORRER EL CODIGO */
+# OCTAVA SECCION: CORRER EL CODIGO
 call ImportarDatos();
 #drop table tablaImportacion;
 
