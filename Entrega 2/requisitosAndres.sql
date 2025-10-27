@@ -108,7 +108,7 @@ returns varchar(68)
 deterministic
 begin
 	declare r_idInventarioFK varchar(68);
-    select idInventarioFK into idInventarioFK from movimiento
+    select idInventarioFK into r_idInventarioFK from movimiento
 		where idMovimiento = i_idMovimiento;
     return r_idInventarioFK;
 end $$
