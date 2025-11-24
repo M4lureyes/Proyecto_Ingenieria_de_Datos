@@ -1,0 +1,282 @@
+//Creación colecciones
+use proyecto
+db.createCollection ("Usuarios")
+db.createCollection("Producto")
+db.createCollection("Inventario")
+db.createCollection("Movimiento")
+db.createCollection("Proveedor")
+db.createCollection("Compra")
+db.createCollection("Cliente")
+db.createCollection("Venta")
+db.createCollection("Ensamble")
+
+//Inserción por colección
+db.Usuarios.insertMany([
+  {idUsuario: 1, nombreUsuario: "Juan Pérez", rolUsuario: "Empleado", nickname: "jperez", claveUsuario: "584@_kfja", correoUsuario: "jperez@gmail.com", telefono: "3145641232", estadoUsuario: "Activo", fechaRegistroUsuario: new Date("2025-11-08T10:30:00Z")},
+  {idUsuario: 2, nombreUsuario: "Ana Torres", rolUsuario: "Empleado", nickname: "anato", claveUsuario: "138*mald", correUsuario: "atorres@gmail.com", telefono: "3167821663", estadoUsuario: "Activo", fechaResgistroUsuario: new Date("2025-11-01T09:45:05Z")},
+  {idUsuario: 3, nomrbreUsuario: "Carlos Díaz", rolUsuario: "Administrador", nickname: "cardi", claveUsuario: "879%aljd", correoUsuario: "cdiaz@gmail.com", telefono: "3168426958", estadoUsuario: "Activo", fechaRegistroUsuairo: new Date("2024-05-06T11:46:10Z")},
+  {idUsuario: 4, nombreUsuario: "Laura Goméz", rolUsuario: "Empleado", nickaname: "laugo", claveUsuario: "168&sfrb", correoUsuario: "lgomz@gmail.com", telefono: "3489756126", estadoUsuario: "Activo", fechaRegistroUsuario: new Date("2023-02-28T08:16:48Z")},
+  {idUsuario: 5, nombreUsuario: "Pedro Sánchez", rolUsuario: "Empleado", nickname: "pesan", claveUsuario: "265/aklg", correoUsuario: "psanchez@gmail.com", telefono: "3184946158", estadoUsuario: "Inactivo", fechaRegistroUsuario: new Date("2022-10-09T13:57:13Z")},
+  {idUsuario: 6, nombreUsuario: "Camila López", rolUsuario: "Empleado", nickname: "camilo", claveUsuario: "893#aijf", correoUsuario: "clopez@gmail.com", telefono: "3186645875", estadoUsuario: "Activo", fechaRegistroUsuario: new Date("2025-08-20T14:30:56Z")},
+  {idUsuario: 7, nombeUsuario: "Andrés Mora", rolUsuario: "Administrador", nickname: "andimo", claveUsuario: "684$kjhnk", correoUsuario: "amora@gmail.com", telefono: "3475643156", estadoUsuario: "Activo", fechaRegistroUsuario: new Date("2024-04-01T12:23:25Z")},
+  {idUsuario: 8, nombreUsuario: "Valentina Ríos", rolUsuario: "Empleado", nickname: "valeri", claveUsuario: "123=amls", correoUsuario: "vrios@gmail.com", telefono: "3518496577", estadoUsuario: "Activo", fechRegistroUsuario: new Date("2023-01-07T09:00:30Z")},
+  {idUsuario: 9, nombreUsuario: "Jorge Martínez", rolUsuario: "Empleado", nickname: "jorma", claveUsuario: "676?aqog", correoUsuario: "jmartinez@gmail.com", telefono: "3187954685", estadoUsuario: "Activo", fechaRegistroUsuario: new Date("2022-03-05T16:20:34Z")},
+  {idUsuario: 10, nombreUsuario: "Sofía Castro", rolUsuario: "Empleado", nickname: "sofica", claveUsuairo: "963¡ñokñ", correoUsuario: "scastro@gmail.com", telefono: "3189936484", estdoUsuario: "Inactivo", fechaRegistroUsuario: new Date("2022-06-28T16:04:19Z")}
+])
+
+db.Producto.insertMany([
+  {idProducto: 1, nombreProducto: "Arroz 1kg", unidadProducto: "kg"},
+  {idProducto: 2, nombreProducto: "Aceite 1L", unidadProducto: "L"},
+  {idProducto: 3, nombreProducto: "Azúcar 1kg", unidadProducto: "kg"},
+  {idProducto: 4, nombreProducto: "Leche 1L", unidadProducto: "L"},
+  {idProducto: 5, nombreProducto: "Pan tajado", unidadProducto: "unidad"},
+  {idProducto: 6, nombreProducto: "Huevos docena", unidadProducto: "unidad"},
+  {idProducto: 7, nombreProducto: "Café 500g", unidadProducto: "g"},
+  {idProducto: 8, nombreProducto: "Gaseosa 2L", unidadProducto: "L"},
+  {idProducto: 9, nombreProducto: "Atún lata", unidadProducto: "unidad"},
+  {idProducot: 10, nombreProducto: "Tomate 500g", unidadProducto: "g"}
+])
+
+db.Proveedor.insertMany([
+  { nitProveedor: "900001001", nombreProveedor: "Alimentos del Norte" },
+  { nitProveedor: "900001002", nombreProveedor: "Distribuidora La Central" },
+  { nitProveedor: "900001003", nombreProveedor: "Proveedor Express" },
+  { nitProveedor: "900001004", nombreProveedor: "Mayorista Andina" },
+  { nitProveedor: "900001005", nombreProveedor: "Comercializadora El Sol" },
+  { nitProveedor: "900001006", nombreProveedor: "La Bodega S.A." },
+  { nitProveedor: "900001007", nombreProveedor: "Supermercados Unificados" },
+  { nitProveedor: "900001008", nombreProveedor: "Distribuciones JM" },
+  { nitProveedor: "900001009", nombreProveedor: "Frutas y Verduras SAS" },
+  { nitProveedor: "900001010", nombreProveedor: "Cárnicos Nacionales" }
+])
+
+db.Cliente.insertMany([
+  { nitCliente: "101001001", nombreCliente: "Juan Herrera" },
+  { nitCliente: "101001002", nombreCliente: "María Díaz" },
+  { nitCliente: "101001003", nombreCliente: "Luis Torres" },
+  { nitCliente: "101001004", nombreCliente: "Camila Rojas" },
+  { nitCliente: "101001005", nombreCliente: "Jorge Castro" },
+  { nitCliente: "101001006", nombreCliente: "Sara Pérez" },
+  { nitCliente: "101001007", nombreCliente: "Fabián Ángel" },
+  { nitCliente: "101001008", nombreCliente: "Elena López" },
+  { nitCliente: "101001009", nombreCliente: "Diego Martínez" },
+  { nitCliente: "101001010", nombreCliente: "Lucía Garzón" }
+])
+
+db.Inventario.insertMany([
+  {idInventario: "I001", bodega: "Principal", cantidadInventario: 120, fechaActualizacion: new Date()},
+  {idInventario: "I002", bodega: "Principal", cantidadInventario: 80, fechaActualizacion: new Date()},
+  {idInventario: "I003", bodega: "Secundaria", cantidadInventario: 150, fechaActualizacion: new Date()},
+  {idInventario: "I004", bodega: "Principal", cantidadInventario: 200, fechaActualizacion: new Date()},
+  {idInventario: "I005", bodega: "Principal", cantidadInventario: 60, fechaActualizacion: new Date()},
+  {idInventario: "I006", bodega: "Secundaria", cantidadInventario: 90, fechaActualizacion: new Date()},
+  {idInventario: "I007", bodega: "Principal", cantidadInventario: 45, fechaActualizacion: new Date()},
+  {idInventario: "I008", bodega: "Principal", cantidadInventario: 30, fechaActualizacion: new Date()},
+  {idInventario: "I009", bodega: "Secundaria", cantidadInventario: 75, fechaActualizacion: new Date()},
+  {idInventario: "I010", bodega: "Principal", cantidadInventario: 110, fechaActualizacion: new Date()}
+])
+
+db.Movimiento.insertMany([
+  { idMovimiento: 1, cantidadNetaMovimiento: 20, tipoMovimiento: "Entrada", fechaMovimiento: new Date(), concepto: "Reposición"},
+  { idMovimiento: 2, cantidadNetaMovimiento: -5, tipoMovimiento: "Salida", fechaMovimiento: new Date(), concepto: "Venta"},
+  { idMovimiento: 3, cantidadNetaMovimiento: 10, tipoMovimiento: "Entrada", fechaMovimiento: new Date(), concepto: "Compra"},
+  { idMovimiento: 4, cantidadNetaMovimiento: -2, tipoMovimiento: "Salida", fechaMovimiento: new Date(), concepto: "Venta rápida"},
+  { idMovimiento: 5, cantidadNetaMovimiento: 15, tipoMovimiento: "Entrada", fechaMovimiento: new Date(), concepto: "Reposición"},
+  { idMovimiento: 6, cantidadNetaMovimiento: -12, tipoMovimiento: "Salida", fechaMovimiento: new Date(), concepto: "Venta"},
+  { idMovimiento: 7, cantidadNetaMovimiento: 8, tipoMovimiento: "Entrada", fechaMovimiento: new Date(), concepto: "Compra proveedor"},
+  { idMovimiento: 8, cantidadNetaMovimiento: -3, tipoMovimiento: "Salida", fechaMovimiento: new Date(), concepto: "Venta"},
+  { idMovimiento: 9, cantidadNetaMovimiento: 20, tipoMovimiento: "Entrada", fechaMovimiento: new Date(), concepto: "Reposición"},
+  { idMovimiento: 10, cantidadNetaMovimiento: -7, tipoMovimiento: "Salida", fechaMovimiento: new Date(), concepto: "Venta"}
+])
+
+db.Movimiento.insertMany([
+  { idMovimiento: 1, cantidadNetaMovimiento: 20, tipoMovimiento: "Entrada", fechaMovimiento: new Date(), concepto: "Reposición"},
+  { idMovimiento: 2, cantidadNetaMovimiento: -5, tipoMovimiento: "Salida", fechaMovimiento: new Date(), concepto: "Venta"},
+  { idMovimiento: 3, cantidadNetaMovimiento: 10, tipoMovimiento: "Entrada", fechaMovimiento: new Date(), concepto: "Compra"},
+  { idMovimiento: 4, cantidadNetaMovimiento: -2, tipoMovimiento: "Salida", fechaMovimiento: new Date(), concepto: "Venta rápida"},
+  { idMovimiento: 5, cantidadNetaMovimiento: 15, tipoMovimiento: "Entrada", fechaMovimiento: new Date(), concepto: "Reposición"},
+  { idMovimiento: 6, cantidadNetaMovimiento: -12, tipoMovimiento: "Salida", fechaMovimiento: new Date(), concepto: "Venta"},
+  { idMovimiento: 7, cantidadNetaMovimiento: 8, tipoMovimiento: "Entrada", fechaMovimiento: new Date(), concepto: "Compra proveedor"},
+  { idMovimiento: 8, cantidadNetaMovimiento: -3, tipoMovimiento: "Salida", fechaMovimiento: new Date(), concepto: "Venta"},
+  { idMovimiento: 9, cantidadNetaMovimiento: 20, tipoMovimiento: "Entrada", fechaMovimiento: new Date(), concepto: "Reposición"},
+  { idMovimiento: 10, cantidadNetaMovimiento: -7, tipoMovimiento: "Salida", fechaMovimiento: new Date(), concepto: "Venta"}
+])
+
+db.Compra.insertMany([
+  { idCompra: 1, costoUnitarioCompra: 3500, costoTotalCompra: 70000},
+  { idCompra: 2, costoUnitarioCompra: 5000, costoTotalCompra: 50000},
+  { idCompra: 3, costoUnitarioCompra: 1200, costoTotalCompra: 18000},
+  { idCompra: 4, costoUnitarioCompra: 9000, costoTotalCompra: 72000},
+  { idCompra: 5, costoUnitarioCompra: 2800, costoTotalCompra: 56000},
+  { idCompra: 6, costoUnitarioCompra: 4500, costoTotalCompra: 45000},
+  { idCompra: 7, costoUnitarioCompra: 10000, costoTotalCompra: 100000},
+  { idCompra: 8, costoUnitarioCompra: 3000, costoTotalCompra: 30000},
+  { idCompra: 9, costoUnitarioCompra: 7000, costoTotalCompra: 49000},
+  { idCompra: 10, costoUnitarioCompra: 2500, costoTotalCompra: 25000}
+])
+
+db.Venta.insertMany([
+  { idVenta: 2, costoUnitarioVenta: 4500, costoTotalVenta: 22500},
+  { idVenta: 4, costoUnitarioVenta: 5200, costoTotalVenta: 10400},
+  { idVenta: 6, costoUnitarioVenta: 3000, costoTotalVenta: 36000},
+  { idVenta: 8, costoUnitarioVenta: 2500, costoTotalVenta: 7500},
+  { idVenta: 10, costoUnitarioVenta: 6000, costoTotalVenta: 4200},
+  { idVenta: 16, costoUnitarioVenta: 3500, costoTotalVenta: 17500},
+  { idVenta: 17, costoUnitarioVenta: 4000, costoTotalVenta: 20000},
+  { idVenta: 18, costoUnitarioVenta: 2800, costoTotalVenta: 14000},
+  { idVenta: 19, costoUnitarioVenta: 7000, costoTotalVenta: 49000},
+  { idVenta: 20, costoUnitarioVenta: 8000, costoTotalVenta: 16000}
+])
+
+db.Ensamble.insertMany([
+  { idEnsamble: "E001", idProductoPadre: "P010", idProductoHijo: "P009", razonHijosPorPadre: 0.5 },
+  { idEnsamble: "E002", idProductoPadre: "P008", idProductoHijo: "P004", razonHijosPorPadre: 1 },
+  { idEnsamble: "E003", idProductoPadre: "P006", idProductoHijo: "P005", razonHijosPorPadre: 2 },
+  { idEnsamble: "E004", idProductoPadre: "P007", idProductoHijo: "P001", razonHijosPorPadre: 1.5 },
+  { idEnsamble: "E005", idProductoPadre: "P003", idProductoHijo: "P002", razonHijosPorPadre: 0.8 },
+  { idEnsamble: "E006", idProductoPadre: "P004", idProductoHijo: "P010", razonHijosPorPadre: 3 },
+  { idEnsamble: "E007", idProductoPadre: "P005", idProductoHijo: "P003", razonHijosPorPadre: 1 },
+  { idEnsamble: "E008", idProductoPadre: "P002", idProductoHijo: "P007", razonHijosPorPadre: 0.4 },
+  { idEnsamble: "E009", idProductoPadre: "P001", idProductoHijo: "P008", razonHijosPorPadre: 2 },
+  { idEnsamble: "E010", idProductoPadre: "P009", idProductoHijo: "P006", razonHijosPorPadre: 0.7 }
+])
+
+//Consultas básicas
+db.Usuarios.find()
+db.Producto.find()
+db.Inventario.find()
+db.Movimiento.find()
+db.Proveedor.find()
+db.Compra.find()
+db.Cliente.find()
+db.Venta.find()
+db.Ensamble.find()
+
+//Consultas específicas por colección
+//Usuarios
+	db.Usuarios.find({fechaRegistroUsuario: {$gte: new Date("2024-01-01")}})
+	db.Usuarios.find({nickname: /^c/i})
+	db.Usuarios.find({telefono: /^318/})
+	db.Usuarios.find({correoUsuario: /gmail\.com$/i})
+	db.Usuarios.find({$or: [{estadoUsuario: "Activo"}, {estdoUsuario: "Activo"}]}, {nombreUsuario: 1, fechaRegistroUsuario: 1})
+	db.Usuarios.find({rolUsuario: "Empleado", fechaRegistroUsuario: {$lt: new Date("2023-01-01")}, $or: [{estadoUsuario: "Activo"}, {estdoUsuario: "Activo"}]})
+	db.Usuarios.countDocuments({rolUsuario: "Administrador"})
+	
+//Producto
+	db.productos.find({"unidadProducto": "kg" })
+	db.productos.find({nombreProducto: /Harina/i })
+	db.productos.countDocuments()
+	db.productos.distinct("unidadProducto")
+	db.productos.find({ "_id": { $in: ["000020B","000030C"] } })
+	db.productos.aggregate([{ $sample: { size: 5 } }])
+	db.productos.find({ nombreProducto: { $exists: true, $ne: "" } }).limit(20)
+
+//Inventario
+	db.inventarios.find({ "producto.idProducto": "000020B" })
+	db.inventarios.find({ cantidadInventario: { $lt: 20 } })
+	db.inventarios.aggregate([{ $group:{ _id:"$bodega", total: {$sum:"$cantidadInventario"} }}])
+	db.inventarios.countDocuments()
+	db.inventarios.find({ "fechaActualizacion": { $gte: new Date("2025-01-01") } })
+	db.inventarios.find({ "producto.nombreProducto": /HARINA/i }).limit(50)
+	db.inventarios.find({ "producto.idProducto": { $exists: true } }).sort({ cantidadInventario: -1 }).limit(5)
+
+//Movimiento
+	db.movimientos.find({ tipoMovimiento: "FACTCOMP" })
+	db.movimientos.find({ tipoMovimiento: "FACTVENT" })
+	db.movimientos.aggregate([{$match: {fechaMovimiento: {$gte: new Date("2025-01-01")}}}, {$group: {_id: "$tipoMovimiento", total: {$sum: "$cantidadNetaMovimiento"}}}])
+	db.movimientos.find({ "inventario.idInventario": "000020B_in_BODEGA1" })
+	db.movimientos.countDocuments({ tipoMovimiento: "ENSAMBLE" })
+	db.movimientos.find({ cantidadNetaMovimiento: { $gt: 0 } }).limit(20)
+	db.movimientos.aggregate([{ $sort:{ fechaMovimiento:-1 } },{ $limit:10 }])
+
+//Compra
+	db.compras.find({ nitProveedorFK: "890400372" })
+	db.compras.aggregate([{ $group: { _id: "$nitProveedorFK", totalComprado: { $sum:"$costoTotalCompra" } } }])
+	db.compras.find({ costoTotalCompra: { $gt: 100000 } })
+	db.compras.find({ idMovimientoFK: { $exists: true } })
+	db.compras.countDocuments()
+	db.compras.find().sort({ costoTotalCompra: -1 }).limit(5)
+	db.compras.find({ $expr: { $gt: ["$costoTotalCompra", { $multiply: ["$costoUnitarioCompra", 1] }] } })
+
+//Venta
+	db.ventas.find({ nitClienteFK: "901234567" })
+	db.ventas.aggregate([{ $group: { _id: "$nitClienteFK", totalVenta: { $sum: "$costoTotalVenta" } } }])
+	db.ventas.find({ costoTotalVenta: { $gt: 50000 } })
+	db.ventas.countDocuments()
+	db.ventas.find({ idMovimientoFK: { $exists: true } })
+	db.ventas.find().sort({ costoTotalVenta: -1 }).limit(10)
+	db.ventas.aggregate([{ $project:{ idMovimientoFK:1, costoTotalVenta:1 } }])
+
+//Proveedor
+	db.proveedores.find({ nombreProveedor: /Castillo/i })
+	db.proveedores.countDocuments()
+	db.proveedores.aggregate([{ $lookup:{ from:"compras", localField:"nitProveedor", foreignField:"nitProveedorFK", as:"compras" } },{ $project:{ nitProveedor:1, nombreProveedor:1, comprasCount: { $size: "$compras" } } }])
+	db.proveedores.find({ "compras.0": { $exists: true } }) // si embebiste compras
+	db.proveedores.find().sort({ nombreProveedor: 1 }).limit(20)
+	db.proveedores.find({ nitProveedor: { $in: ["890400372","800123456"] } })
+
+//Cliente
+	db.clientes.find({ nombreCliente: /Panaderia/i })
+	db.clientes.countDocuments()
+	db.clientes.aggregate([{ $lookup:{ from:"ventas", localField:"nitCliente", foreignField:"nitClienteFK", as:"ventas" } },{ $project:{ nitCliente:1, nombreCliente:1, ventasTotal: { $sum: "$ventas.costoTotalVenta" } } }])
+	db.clientes.find({ "ventas.0": { $exists: true } })
+	db.clientes.find().sort({ nombreCliente: 1 })
+	db.clientes.find({ nitCliente: { $exists: true } }).limit(20)
+
+//Ensamble
+	db.ensambles.find({ "productoPadre.id": "000020B" })
+	db.ensambles.find({ razonHijosPorPadre: { $gt: 1 } })
+	db.ensambles.aggregate([{ $lookup:{ from:"productos", localField:"productoHijo.id", foreignField:"_id", as:"hijo" } },{ $project:{ _id:1, productoPadre:1, hijoNombre: { $arrayElemAt:["$hijo.nombreProducto",0] } } }])
+	db.ensambles.countDocuments()
+	db.ensambles.find().sort({ razonHijosPorPadre: -1 }).limit(10)
+	db.ensambles.find({ "productoHijo.nombre": /masa/i })
+
+//Modificaciones
+//Actualizar precio/atributo (ejemplo) - productos
+db.productos.updateOne({_id:"000020B"}, { $set: { unidadProducto: "kg" } });
+
+//Incrementar stock en inventarios
+db.inventarios.updateMany({}, { $inc: { cantidadInventario: 10 }});
+
+//Actualizar fecha de actualización de un inventario
+db.inventarios.updateOne({ _id: "000020B_in_BODEGA1" }, { $set: { fechaActualizacion: new Date() }});
+
+//Corregir nombre de proveedor
+db.proveedores.updateOne({ nitProveedor: "890400372" }, { $set: { nombreProveedor: "Rafael Del Castillo & CÍA" }});
+
+//Marcar cliente inactivo (ejemplo: agregar campo)
+db.clientes.updateOne({ nitCliente: "901234567" }, { $set: { estadoCliente: "Inactivo" }});
+
+//Eliminaciones
+//Eliminar producto si NO existe en inventarios (comprobación manual)
+if (db.inventarios.countDocuments({ "producto.idProducto": "000999X" }) === 0) {
+  db.productos.deleteOne({ _id: "000999X" })
+} else {
+  print("No se puede eliminar: existen inventarios asociados.")}
+
+//Consultas cruzadas entre colecciones
+//Ventas y productos
+db.ventas.aggregate([
+  { $lookup: { from: "productos", localField: "idProductoFK", foreignField: "_id", as: "producto_detalle" } },
+  { $unwind: { path: "$producto_detalle", preserveNullAndEmptyArrays: true } },
+  { $project: { idMovimientoFK:1, costoTotalVenta:1, "producto_detalle.nombreProducto":1 } }
+])
+
+//Compras por proveedor con detalle producto
+db.compras.aggregate([
+  { $lookup:{ from:"movimientos", localField:"idMovimientoFK", foreignField:"_id", as:"mov" } },
+  { $unwind:"$mov" },
+  { $lookup:{ from:"inventarios", localField:"mov.inventario.idInventario", foreignField:"_id", as:"inv" } },
+  { $unwind:{ path:"$inv", preserveNullAndEmptyArrays:true } },
+  { $lookup:{ from:"productos", localField:"inv.producto.idProducto", foreignField:"_id", as:"producto" } },
+  { $unwind:{ path:"$producto", preserveNullAndEmptyArrays:true } },
+  { $project:{ idMovimientoFK:1, costoTotalCompra:1, proveedor: "$nitProveedorFK", producto: "$producto.nombreProducto" } }
+])
+
+
+//Producto padre con movimientos de hijos
+db.ensambles.aggregate([
+  { $lookup:{ from:"productos", localField:"productoHijo.id", foreignField:"_id", as:"hijo" } },
+  { $lookup:{ from:"inventarios", localField:"productoHijo.id", foreignField:"producto.idProducto", as:"inv_hijo" } },
+  { $project:{ idEnsamble:1, productoPadre:1, hijo: { $arrayElemAt: ["$hijo.nombreProducto",0] }, inventariosHijo: "$inv_hijo" } }
+])
